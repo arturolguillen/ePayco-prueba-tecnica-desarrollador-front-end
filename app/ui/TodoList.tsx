@@ -1,7 +1,8 @@
 "use client";
 
 import { use } from "react";
-import { Todo } from "../todos/page";
+import type { Todo } from "@/app/todos/page";
+import TodoItem from "@/app/ui/TodoItem";
 
 export default function TodoList({ todos }: {
     todos: Promise<Todo[]>
@@ -9,6 +10,8 @@ export default function TodoList({ todos }: {
     const allTodos = use(todos);
 
     return (
-        <>{ JSON.stringify(allTodos) }</>
+        <div className="space-y-4">
+            { allTodos.map(todo => <TodoItem key={ todo.id } todo={ todo } />) }
+        </div>
     );
 }
