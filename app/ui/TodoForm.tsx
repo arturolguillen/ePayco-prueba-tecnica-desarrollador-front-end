@@ -42,7 +42,7 @@ export default function TodoForm({ todo }: {
                         type="checkbox"
                         name="completed"
                         id="completed"
-                        className="toggle"
+                        className="toggle toggle-primary"
                         defaultChecked={ state.values.completed }
                     />
                 </div>

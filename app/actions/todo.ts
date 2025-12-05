@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import * as z from "zod";
+import { Todo } from "@/app/todos/page";
 
 export type SaveTodoState = {
     values: {
@@ -81,4 +82,26 @@ export async function saveTodo(prevState: SaveTodoState, formData: FormData) {
     }
 
     redirect('/todos');
+}
+
+export async function toggleTodoCompleted(todo: Todo) {
+    try {
+        const res = await fetch(`https://jsonplaceholder.typicode.com/todos/${todo.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                ...todo,
+                userId: 1,
+            }),
+        });
+
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+
+        revalidatePath('/todos');
+    } catch (error) {
+        console.error("Failed to save todo:", error);
+        throw error;
+    }
 }
