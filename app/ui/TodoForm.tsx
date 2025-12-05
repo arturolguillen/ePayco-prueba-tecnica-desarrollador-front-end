@@ -1,14 +1,18 @@
 "use client";
 
 import { saveTodo, SaveTodoState } from "@/app/actions/todo";
-import { useActionState } from "react";
+import { use, useActionState } from "react";
 import FormError from "@/app/ui/FormError";
+import { Todo } from "@/app/todos/page";
 
-export default function TodoForm() {
+export default function TodoForm({ todo }: {
+    todo?: Promise<Todo>
+}) {
+    const theTodo = todo ? use(todo) : null;
     const initialState: SaveTodoState = {
         values: {
-            title: '',
-            completed: false,
+            title: theTodo?.title ?? '',
+            completed: theTodo?.completed ?? false,
         },
         errors: {},
     };
