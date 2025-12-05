@@ -45,7 +45,7 @@ export default function TodoForm() {
             <div className="md:flex md:justify-end">
                 <button
                     type="submit"
-                    className="btn btn-primary w-full md:w-auto"
+                    className="btn btn-primary btn-soft w-full md:w-auto"
                     disabled={ pending }
                 >
                     { pending ? 'Guardando tarea...' : 'Guardar Tarea' }
