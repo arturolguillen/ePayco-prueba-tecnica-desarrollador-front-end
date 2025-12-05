@@ -20,6 +20,7 @@ const SaveTodoSchema = z.object({
 });
 
 export async function saveTodo(prevState: SaveTodoState, formData: FormData) {
+    const id = formData.get("id");
     const title = formData.get("title");
     const completed = formData.get("completed");
 
@@ -41,16 +42,28 @@ export async function saveTodo(prevState: SaveTodoState, formData: FormData) {
     }
 
     const valid = result.data;
+    const method = id ? "PUT" : "POST";
+    const url = id
+        ? `https://jsonplaceholder.typicode.com/todos/${id}`
+        : "https://jsonplaceholder.typicode.com/todos";
+    const body = id
+        ? JSON.stringify({
+            id: Number(id),
+            title: valid.title,
+            completed: valid.completed,
+            userId: 1,
+        })
+        : JSON.stringify({
+            title: valid.title,
+            completed: valid.completed,
+            userId: 1,
+        });
 
     try {
-        const res = await fetch("https://jsonplaceholder.typicode.com/todos", {
-            method: "POST",
+        const res = await fetch(url, {
+            method,
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                title: valid.title,
-                completed: valid.completed,
-                userId: 1,
-            }),
+            body,
         });
 
         if (!res.ok) {
@@ -59,11 +72,11 @@ export async function saveTodo(prevState: SaveTodoState, formData: FormData) {
 
         revalidatePath('/todos');
     } catch (error) {
-        console.error("Failed to create todo:", error);
+        console.error("Failed to save todo:", error);
 
         return {
             ...defaultResponse,
-            errors: { title: [ "No se pudo crear la tarea. Por favor, intenta de nuevo." ] },
+            errors: { title: [ "No se pudo guardar la tarea. Por favor, intenta de nuevo." ] },
         };
     }
 

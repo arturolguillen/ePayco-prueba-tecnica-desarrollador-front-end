@@ -21,6 +21,7 @@ export default function TodoForm({ todo }: {
 
     return (
         <form action={ formAction } className="space-y-3">
+            { theTodo && <input type="hidden" name="id" value={ theTodo.id } /> }
             <label htmlFor="title" className="floating-label">
                 <span>{ 'Escribe tu tarea' }</span>
                 <input
