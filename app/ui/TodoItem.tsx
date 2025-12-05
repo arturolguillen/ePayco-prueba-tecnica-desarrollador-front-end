@@ -1,36 +1,33 @@
 import type { Todo } from "@/app/todos/page";
 import GenericCard from "@/app/ui/GenericCard";
 import clsx from "clsx";
-import { Trash } from "lucide-react";
 import Link from "next/link";
-import { memo } from "react";
-import { toggleTodoCompleted } from "@/app/actions/todo";
+import { memo, startTransition, useActionState } from "react";
+import { deleteTodo, toggleTodoCompleted } from "@/app/actions/todo";
+import TodoToggleCompleted from "@/app/ui/TodoToggleCompleted";
+import TodoDeleteButton from "@/app/ui/TodoDeleteButton";
 
-function TodoItem({ todo, toggleCompleted }: {
+function TodoItem({ todo, onToggleCompleted, onDelete }: {
     todo: Todo;
-    toggleCompleted: (todo: Todo) => void;
+    onToggleCompleted: (todo: Todo) => void;
+    onDelete: (todo: Todo) => void;
 }) {
+    const [ _, deleteAction, pendingDelete ] = useActionState(() => deleteTodo(todo), null);
+
     return (
-        <GenericCard>
+        <GenericCard className={ clsx(pendingDelete && 'opacity-50 pointer-events-none') }>
             <div className="flex items-center justify-between gap-8">
                 <div className="inline-flex items-center gap-4">
-                    <input
-                        type="checkbox"
-                        name={ `mark_as_completed_${todo.id}` }
-                        id={ `mark_as_completed_${todo.id}` }
-                        className="checkbox checkbox-primary checkbox-sm rounded-full"
-                        checked={ todo.completed }
-                        onChange={ async () => {
-                            // Optimistic UI update.
-                            toggleCompleted(todo);
-                            try {
-                                await toggleTodoCompleted(todo);
-                            } catch (error) {
-                                // Revert UI update on error.
-                                toggleCompleted(todo);
-                            }
-                        } }
-                    />
+                    <TodoToggleCompleted todo={ todo } onToggle={ async () => {
+                        // Optimistic UI update.
+                        onToggleCompleted(todo);
+                        try {
+                            await toggleTodoCompleted(todo);
+                        } catch (error) {
+                            // Revert UI update on error.
+                            onToggleCompleted(todo);
+                        }
+                    } } />
                     <p className={ clsx({
                         'text-lg font-medium -mt-1': true,
                         'line-through text-base-content/50': todo.completed,
@@ -40,11 +37,12 @@ function TodoItem({ todo, toggleCompleted }: {
                         </Link>
                     </p>
                 </div>
-                <div>
-                    <button className="btn btn-error btn-sm btn-ghost">
-                        <Trash size={ 16 } />
-                    </button>
-                </div>
+                <TodoDeleteButton todo={ todo } onClick={ () => {
+                    try {
+                        startTransition(deleteAction);
+                        onDelete(todo);
+                    } catch (_) { }
+                } } />
             </div>
         </GenericCard>
     );

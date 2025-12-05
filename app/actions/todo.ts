@@ -105,3 +105,20 @@ export async function toggleTodoCompleted(todo: Todo) {
         throw error;
     }
 }
+
+export async function deleteTodo(todo: Todo) {
+    try {
+        const res = await fetch(`https://jsonplaceholder.typicode.com/todos/${todo.id}`, {
+            method: "DELETE",
+        });
+
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+
+        revalidatePath('/todos');
+    } catch (error) {
+        console.error("Failed to delete todo:", error);
+        throw error;
+    }
+}
