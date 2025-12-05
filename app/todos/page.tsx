@@ -3,6 +3,8 @@ import Header from "@/app/ui/Header";
 import MainLandmark from "@/app/ui/MainLandmark";
 import { Suspense } from "react";
 import TodoList from "@/app/ui/TodoList";
+import AddTodoFab from "@/app/ui/AddTodoFab";
+import TodoListSkeleton from "@/app/ui/TodoListSkeleton";
 
 export const metadata: Metadata = {
     title: 'Tareas',
@@ -28,10 +30,11 @@ export default async function Page() {
         <>
             <Header title={ 'ePayco tareas' } />
             <MainLandmark>
-                <Suspense fallback={ <div>Loading...</div> }>
+                <Suspense fallback={ <TodoListSkeleton /> }>
                     <TodoList todos={ todos } />
                 </Suspense>
             </MainLandmark>
+            <AddTodoFab />
         </>
     );
 }

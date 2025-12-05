@@ -18,7 +18,7 @@ export default function Header({ title, backTo }: {
                 </Link> }
                 <h1 className="font-bold text-2xl">{ title }</h1>
             </div>
-            { pathname === '/todos' && <Link href={ '/todos/create' } title={ '' } className="btn btn-primary btn-soft btn-sm">
+            { pathname === '/todos' && <Link href={ '/todos/create' } title={ 'Nueva tarea' } className="btn btn-primary btn-soft btn-sm hidden xl:inline-flex">
                 <Plus />
                 <span>Nueva tarea</span>
             </Link> }
