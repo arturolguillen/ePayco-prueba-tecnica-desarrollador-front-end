@@ -1,14 +1,18 @@
 "use client";
 
 import { saveTodo, SaveTodoState } from "@/app/actions/todo";
-import { useActionState } from "react";
+import { use, useActionState } from "react";
 import FormError from "@/app/ui/FormError";
+import { Todo } from "@/app/todos/page";
 
-export default function TodoForm() {
+export default function TodoForm({ todo }: {
+    todo?: Promise<Todo>
+}) {
+    const theTodo = todo ? use(todo) : null;
     const initialState: SaveTodoState = {
         values: {
-            title: '',
-            completed: false,
+            title: theTodo?.title ?? '',
+            completed: theTodo?.completed ?? false,
         },
         errors: {},
     };
@@ -17,6 +21,7 @@ export default function TodoForm() {
 
     return (
         <form action={ formAction } className="space-y-3">
+            { theTodo && <input type="hidden" name="id" value={ theTodo.id } /> }
             <label htmlFor="title" className="floating-label">
                 <span>{ 'Escribe tu tarea' }</span>
                 <input
@@ -37,7 +42,7 @@ export default function TodoForm() {
                         type="checkbox"
                         name="completed"
                         id="completed"
-                        className="toggle"
+                        className="toggle toggle-primary"
                         defaultChecked={ state.values.completed }
                     />
                 </div>
