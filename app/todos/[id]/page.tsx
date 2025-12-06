@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import GenericCard from "@/app/ui/GenericCard";
 import TodoForm from "@/app/ui/TodoForm";
+import TodoFormSkeleton from "@/app/ui/TodoFormSkeleton";
 
 export const metadata: Metadata = {
     title: 'Editar tarea',
@@ -26,7 +27,7 @@ export default async function Page({ params }: {
         <>
             <Header title={ 'Editar tarea' } backTo={ '/todos' } />
             <MainLandmark>
-                <Suspense fallback={ <p>Cargando tarea...</p> }>
+                <Suspense fallback={ <TodoFormSkeleton /> }>
                     <GenericCard>
                         <TodoForm todo={ todo } />
                     </GenericCard>
