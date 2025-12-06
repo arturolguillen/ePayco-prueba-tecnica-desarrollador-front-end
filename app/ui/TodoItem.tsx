@@ -23,7 +23,7 @@ function TodoItem({ todo, onToggleCompleted, onDelete }: {
                         onToggleCompleted(todo);
                         try {
                             await toggleTodoCompleted(todo);
-                        } catch (error) {
+                        } catch (_) {
                             // Revert UI update on error.
                             onToggleCompleted(todo);
                         }

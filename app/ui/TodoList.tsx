@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useCallback, useEffect, useMemo, useState } from "react";
+import { use, useCallback, useMemo, useState } from "react";
 import type { Todo } from "@/app/todos/page";
 import TodoItem from "@/app/ui/TodoItem";
 import TodoTabs, { ActiveTab } from "@/app/ui/TodoTabs";
